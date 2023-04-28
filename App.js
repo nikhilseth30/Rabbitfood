@@ -1,12 +1,73 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import CategoriesScreen from './screens/CategoriesScreen'
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import FavoritesScreen from './screens/FavoritesScreen';
+import { FontAwesome } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import MealOverviewScreen from './screens/MealOverviewScreen';
+import MealsDetailScreen from './screens/MealsDetailScreen';
+import FavoritesContextProvider from './store/context/favorites-context';
+  
+
+const Stack = createNativeStackNavigator()
+const Drawer = createDrawerNavigator()
+function DrawerNavigator(){
+  return <Drawer.Navigator
+  screenOptions={{
+    headerStyle:{backgroundColor:"#341501"},
+    headerTintColor:"#fff", 
+    sceneContainerStyle:{backgroundColor:"#3f2f25"},
+    drawerContentStyle:{backgroundColor:"#341501"},
+    drawerActiveTintColor:"#351504",
+    drawerActiveBackgroundColor:"#e4baa1",
+    drawerInactiveTintColor:"white",
+  }}
+  >
+    <Drawer.Screen
+    name="Categories"
+    component={CategoriesScreen}
+    options={{
+      title: "All Categories",
+      drawerIcon:({color,size})=> <FontAwesome name="angellist" size={size} color={color} />
+    }}
+    />
+    <Drawer.Screen
+    name="Favorites"
+    component={FavoritesScreen}
+    options={{
+      drawerIcon:({color,size}) =><AntDesign name="star" size={size} color={color} />
+    }}
+    />
+  </Drawer.Navigator>
+}
+
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <FavoritesContextProvider>
+   <NavigationContainer> 
+    <Stack.Navigator>
+      <Stack.Screen
+      name="Drawer"
+      component={DrawerNavigator}
+      options={{
+        headerShown:false
+      }}
+      />
+      <Stack.Screen
+      name="MealsOverview"
+      component={MealOverviewScreen}
+      />
+      <Stack.Screen
+      name="MealsDetail"
+      component={MealsDetailScreen}
+      />
+    </Stack.Navigator>
+   </NavigationContainer>
+   </FavoritesContextProvider>
+
   );
 }
 
